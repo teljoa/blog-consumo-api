@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const newPost = {
         title: postTitle,
         content: postContent,
-        autorId: parseInt(postAuthor)
+        autorId: postAuthor
       };
   
       fetch('http://localhost:3000/articles', {
