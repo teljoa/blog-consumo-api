@@ -26,11 +26,14 @@ document.addEventListener('DOMContentLoaded',()=>{
           .then(response => response.json())
           .then(comments => {
             comments.forEach(comment => {
+              fetch(`http://localhost:3000/users/${comment.userId}`)
+                .then(response =>response.json()).then(user =>{
                 const li = document.createElement('li');
-                li.textContent = `${comment.comment} - ${comment.userId}`;
+                li.textContent =`${comment.comment} - Autor: ${user.name}`;
                 commentsList.appendChild(li);
-              });
-            }).catch(error => console.error('Error al cargar los comentarios:', error));
+              }).catch(error => console.error('Error al cargar el autor:', error));  
+            });
+          }).catch(error => console.error('Error al cargar los comentarios:', error));
         }).catch(error => console.error('Error al cargar el post:', error));
     
         fetch('http://localhost:3000/users')
@@ -43,4 +46,5 @@ document.addEventListener('DOMContentLoaded',()=>{
             commentAuthorSelect.appendChild(option);
           });
         }).catch(error => console.error('Error al cargar los usuarios:', error));
+        
 })  
