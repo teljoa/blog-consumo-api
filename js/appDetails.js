@@ -47,4 +47,44 @@ document.addEventListener('DOMContentLoaded',()=>{
           });
         }).catch(error => console.error('Error al cargar los usuarios:', error));
         
+        commentForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+      
+          const userId = commentAuthorSelect.value;
+          const commentText = commentContent.value;
+      
+          if (!userId || !commentText) {
+            alert('Por favor, completa todos los campos.');
+            return;
+          }
+      
+          const newComment = {
+            comment: commentText,
+            userId: parseInt(userId),
+            articleId: parseInt(postId)
+          };
+      
+          fetch('http://localhost:3000/comments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newComment)
+          })
+            .then(response => response.json())
+            .then(comment => {
+              alert('Comentario añadido exitosamente');
+
+              fetch(`http://localhost:3000/users/${comment.userId}`)
+                .then(response =>response.json()).then(user =>{
+                  const li = document.createElement('li');
+                  li.textContent = `${comment.comment} - ${user.name}`;
+                  commentsList.appendChild(li);
+                }).catch(error => console.error('Error al cargar el autor:', error));  
+            })
+            .catch(error => {
+              console.error('Error al añadir el comentario:', error);
+              alert('Ocurrió un error al añadir el comentario.');
+            });
+        });
 })  
